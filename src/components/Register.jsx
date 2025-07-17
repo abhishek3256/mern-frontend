@@ -1,80 +1,101 @@
-
-
-
-// import React from 'react'
-// import './Register.css'
-// import { useState } from 'react'
-// // import { useRef } from 'react'
-
-// const Register = () => {
-//     const[user,setuser]=useState({})
-//     const handleSubmit=()=>{
-//         console.log(user)
-//     }
-//   return (
-//     <div className='App-register-Row' >
-
-//        <div >
-//          <h2>Registration form</h2>
-//         <p>
-//             <input type="text" onChange={(e)=>setuser({...user,firstname:e.target.value})} placeholder='Enter first name' />
-//         </p>
-//         <p>
-//             <input type="text" onChange={(e)=>setuser({...user,lastname:e.target.value})} placeholder='Enter last name' />
-//         </p>
-//         <p>
-//             <input type="text" onChange={(e)=>setuser({...user,email:e.target.value})} placeholder='Enter email' />
-//         </p>
-//         <p>
-//             <input type="text" onChange={(e)=>setuser({...user,password:e.target.value})} placeholder='Enter password' />
-//         </p>
-//         <button onClick={handleSubmit}>Submit</button>
-//         </div>
-      
-//     </div>
-//   )
-// }
-
-// export default Register
-import React, { useRef } from 'react';
-import './Register.css';
-
-const Register = () => {
-  const firstname = useRef();
-  const lastname = useRef();
-  const email = useRef();
-  const password = useRef();
-
-  const handleSubmit = () => {
-    const user = {
-      firstname: firstname.current.value,
-      lastname: lastname.current.value,
-      email: email.current.value,
-      password: password.current.value,
-    };
-    console.log("Registered User:", user);
+import "./Register.css";
+// import { useRef } from "react";
+import { useState } from "react";
+import { Link,useNavigate } from "react-router-dom";
+import axios from "axios";
+export default function Register() {
+  const [user, setUser] = useState({});
+  const [error, setError] = useState();
+  const Navigate = useNavigate()
+  const API_URL = import.meta.env.VITE_API_URL
+  const handleSubmit = async () => {
+    try {
+      const url = `${API_URL}/api/users/register`;
+      const result = await axios.post(url, user);
+      setError("Data saved successfully");
+      Navigate("/login")
+    } catch (err) {
+      console.log(err);
+      setError("Something went wrong");
+    }
   };
-
   return (
     <div className="App-Register-Row">
-      <div className="App-Register-Row-input">
+      <div style={{ backgroundColor: "white" }}>
         <h2>Registration Form</h2>
+        {error}
         <p>
-          <input type="text" ref={firstname} placeholder="Enter first name" />
+          <input
+            type="text"
+            onChange={(e) => setUser({ ...user, firstName: e.target.value })}
+            placeholder="Enter First Name"
+          />
         </p>
         <p>
-          <input type="text" ref={lastname} placeholder="Enter last name" />
+          <input
+            type="text"
+            placeholder="Enter Last Name"
+            onChange={(e) => setUser({ ...user, lastName: e.target.value })}
+          />
         </p>
         <p>
-          <input type="text" ref={email} placeholder="Enter email" />
+          <input
+            type="text"
+            placeholder="Enter Email Address"
+            onChange={(e) => setUser({ ...user, email: e.target.value })}
+          />
         </p>
         <p>
-          <input type="text" ref={password} placeholder="Enter password" />
+          <input
+            type="password"
+            placeholder="Enter Password"
+            onChange={(e) => setUser({ ...user, password: e.target.value })}
+          />
         </p>
-        <button onClick={handleSubmit}>Submit</button>
+        <p>
+          <button onClick={handleSubmit}>Submit</button>
+        </p>
+        <hr />
+      <Link to="/login">Already a member? Login Here...</Link>
       </div>
     </div>
   );
-};
+}
 
-export default Register;
+// export default function Register() {
+//   const firstName = useRef();
+//   const lastName = useRef();
+//   const email = useRef();
+//   const password = useRef();
+//   const handleSubmit = () => {
+//     const user = {
+//       firstName: firstName.current.value,
+//       lastName: lastName.current.value,
+//       email: email.current.value,
+//       password: password.current.value,
+//     };
+//     console.log(user);
+//   };
+//   return (
+//     <div className="App-Register-Row">
+//       <div style={{ backgroundColor: "white" }}>
+//         <h2>Registration Form</h2>
+//         <p>
+//           <input type="text" placeholder="Enter First Name" ref={firstName} />
+//         </p>
+//         <p>
+//           <input type="text" placeholder="Enter Last Name" ref={lastName} />
+//         </p>
+//         <p>
+//           <input type="text" placeholder="Enter Email Address" ref={email} />
+//         </p>
+//         <p>
+//           <input type="password" placeholder="Enter Password" ref={password} />
+//         </p>
+//         <p>
+//           <button onClick={handleSubmit}>Submit</button>
+//         </p>
+//       </div>
+//     </div>
+//   );
+// }
